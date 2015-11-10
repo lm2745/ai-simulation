@@ -8,8 +8,13 @@ public class Mouse : MonoBehaviour {
 	public AudioSource squeak;
 	
 	void FixedUpdate () {
+
 		
-		Vector3 directionToCat = cat.transform.position - transform.position;
+		for (int i=0; i<GameManager.listOfMice.Count; i++) {
+			
+			// declare a var of type Vector3, called "directionToCat", set to a vector that goes from [current position] to [cat's current position]
+			Vector3 directionToCat = GameManager.listOfMice[i].transform.position - transform.position;
+
 		float angle = Vector3.Angle (directionToCat, transform.forward);  
 		
 		if (angle < 180f) {
@@ -18,10 +23,13 @@ public class Mouse : MonoBehaviour {
 			
 			if (Physics.Raycast (mouseRay, out mouseRayHitInfo, 100f)) {
 				Debug.DrawRay (mouseRay.origin, mouseRay.direction);
-
-			if (mouseRayHitInfo.collider.tag == "Cat") { 
+				
+				if (mouseRayHitInfo.collider.tag == "Cat") { 
 					rbodyMouse.AddForce (-directionToCat.normalized * 1000f);
 					squeak.Play();
+
+							GameManager.listOfMice.Remove (transform.gameObject);
+						}
 				}
 			}
 		}
